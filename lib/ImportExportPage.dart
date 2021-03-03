@@ -8,6 +8,35 @@ class ImportExportPage extends StatefulWidget {
 }
 
 class _ImportExportPageState extends State<ImportExportPage> {
+
+  DateTime selectedDateFrom = DateTime.now();
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateFrom,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDateFrom)
+      setState(() {
+        selectedDateFrom = picked;
+      });
+  }
+
+  DateTime selectedDateEnd = DateTime.now();
+  _selectDateEnd(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateEnd,
+      firstDate: DateTime(2000,1,1),
+      lastDate: DateTime(2099,12,31),
+    );
+    if (picked != null && picked != selectedDateEnd)
+      setState(() {
+        selectedDateEnd = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -52,18 +81,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                     FlatButton(
                         onPressed: ()
                         {
-                          DatePicker.showDatePicker(context,
-                              showTitleActions: true,
-                              minTime: DateTime(1900, 3, 5),
-                              maxTime: DateTime(2099, 6, 7),
-                              onChanged: (date)
-                              {
-                                print('change $date');
-                              },
-                              onConfirm: (date)
-                              {
-                                print('confirm $date');
-                              }, currentTime: DateTime.now(), locale: LocaleType.en);
+                          _selectDate(context);
                         },
                         child: Text(
                           'Select Date',
@@ -71,7 +89,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                         )
                     ),
                     Text(
-                        'Date: 02/02/2021',
+                        "${selectedDateFrom.toLocal()}".split(' ')[0],
                       style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.black
@@ -94,18 +112,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                   FlatButton(
                       onPressed: ()
                       {
-                        DatePicker.showDatePicker(context,
-                            showTitleActions: true,
-                            minTime: DateTime(1900, 3, 5),
-                            maxTime: DateTime(2099, 6, 7),
-                            onChanged: (date)
-                            {
-                              print('change $date');
-                            },
-                            onConfirm: (date)
-                            {
-                              print('confirm $date');
-                            }, currentTime: DateTime.now(), locale: LocaleType.en);
+                        _selectDateEnd(context);
                       },
                       child: Text(
                         'Select Date',
@@ -113,7 +120,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                       )
                   ),
                   Text(
-                      'Date: 02/03/2021',
+                    "${selectedDateEnd.toLocal()}".split(' ')[0],
                     style: TextStyle(
                         fontSize: 16.0,
                         color: Colors.black

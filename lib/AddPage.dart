@@ -19,8 +19,6 @@ class _AddPageState extends State<AddPage>
 {
   SingingCharacter _character = SingingCharacter._online;
   ABC _abc = ABC._p;
-  DateTime _dateTime;
-
 
   File _image;
 
@@ -33,10 +31,25 @@ class _AddPageState extends State<AddPage>
     });
   }
 
+  DateTime selectedDate = DateTime.now();
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context)
   {
     var screenSize = MediaQuery.of(context).size;
+    var _date;
     TextEditingController phone = new TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -148,6 +161,7 @@ class _AddPageState extends State<AddPage>
                     ),
                     TextFormField(
                       autocorrect: true,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Mobile Number: ',
                         labelStyle: TextStyle(
@@ -274,24 +288,8 @@ class _AddPageState extends State<AddPage>
                       child: Row(
                         children: [
                           FlatButton(
-                              onPressed: () {
-                                DatePicker.showDatePicker(context,
-                                    showTitleActions: true,
-                                    minTime: DateTime(1900, 3, 5),
-                                    maxTime: DateTime(2099, 6, 7),
-                                    onChanged: (date)
-                                    {
-                                      _dateTime = date;
-                                      //print('change $date');
-                                    },
-                                    onConfirm: (date)
-                                    {
-                                      //print('confirm $date');
-                                      _dateTime = date;
-                                    },
-                                    currentTime: DateTime.now(),
-                                    locale: LocaleType.en
-                                );
+                              onPressed: (){
+                                _selectDate(context);
                               },
                               child: Text(
                                 'Select Date',
@@ -299,12 +297,12 @@ class _AddPageState extends State<AddPage>
                               )
                           ),
                           Text(
-                            'Date: ${_dateTime}',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.black
-                            ),
-                          )
+                                "${selectedDate.toLocal()}".split(' ')[0],
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.black
+                                ),
+                              )
                         ],
                       ),
                 ),
